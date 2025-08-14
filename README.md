@@ -50,7 +50,7 @@ A comprehensive Model Context Protocol (MCP) server for weather data with bullet
 1. **Clone the repository:**
    ```bash
    git clone https://github.com/yourusername/weather-api-mcp-server.git
-   cd weather-mcp-server
+   cd weather-api-mcp-server
    ```
 
 2. **Install dependencies with uv:**
@@ -211,8 +211,8 @@ Add to your Claude Desktop MCP settings:
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/OriShmila/weather-mcp-server",
-        "weather-mcp-server"
+        "git+https://github.com/OriShmila/weather-api-mcp-server",
+        "weather-api-mcp-server"
       ],
       "env": {
         "WEATHER_API_KEY": "your_api_key_here"
@@ -234,7 +234,7 @@ The server implements the standard MCP protocol and works with any MCP-compatibl
 ## 📁 Project Structure
 
 ```
-weather-mcp-server/
+weather-api-mcp-server/
 ├── main.py              # MCP server implementation
 ├── tools.json           # Tool schemas and definitions
 ├── test_server.py       # Comprehensive test suite
