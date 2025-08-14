@@ -1,6 +1,4 @@
-# Weather MCP Server
-
-[![smithery badge](https://smithery.ai/badge/@devilcoder01/weather-mcp-server)](https://smithery.ai/server/@devilcoder01/weather-mcp-server)
+# Weather API MCP Server
 
 A comprehensive Model Context Protocol (MCP) server for weather data with bulletproof schema validation. Built with the standard MCP framework and featuring explicit tool schemas, comprehensive testing, and full input/output validation.
 
@@ -47,19 +45,11 @@ A comprehensive Model Context Protocol (MCP) server for weather data with bullet
 
 ## 🚀 Installation
 
-### Quick Install via Smithery
-
-Install automatically for Claude Desktop via [Smithery](https://smithery.ai/server/@devilcoder01/weather-mcp-server):
-
-```bash
-npx -y @smithery/cli install @devilcoder01/weather-mcp-server --client claude
-```
-
 ### Manual Installation
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/weather-mcp-server.git
+   git clone https://github.com/yourusername/weather-api-mcp-server.git
    cd weather-mcp-server
    ```
 
@@ -93,8 +83,8 @@ Add to your MCP client's settings (example for Claude Desktop):
       "command": "uvx",
       "args": [
         "--from",
-        "git+https://github.com/OriShmila/weather-mcp-server",
-        "weather-mcp-server"
+        "git+https://github.com/OriShmila/weather-api-mcp-server",
+        "weather-api-mcp-server"
       ],
       "env": {
         "WEATHER_API_KEY": "your_api_key_here"
@@ -122,7 +112,7 @@ uv run python test_server.py
 
 **Expected output:**
 ```
-🌤️  Weather MCP Server Test Suite
+🌤️  Weather API MCP Server Test Suite
 ==================================================
 ✅ Loaded 9 tool schemas
 ✅ Mapped 9 tool functions
