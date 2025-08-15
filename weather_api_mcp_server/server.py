@@ -12,6 +12,7 @@ from .handlers import TOOL_FUNCTIONS
 
 logging.basicConfig(level=logging.INFO, format="%(asctime)s %(levelname)s %(message)s")
 logger = logging.getLogger("WeatherMCP")
+logging.getLogger("httpx").setLevel(logging.WARNING)
 
 
 def _package_path(filename: str) -> str:
