@@ -3,7 +3,7 @@
   "tools": [
     {
       "name": "get_weather",
-      "description": "Get weather - current and forecast (1–3 days) - for a location.",
+      "description": "Get weather - current and forecast - for a location.",
       "inputSchema": {
         "type": "object",
         "properties": {
@@ -13,10 +13,10 @@
           },
           "days": {
             "type": "integer",
-            "description": "Number of days (1–3).",
+            "description": "Number of days (1–14).",
             "minimum": 1,
-            "maximum": 3,
-            "default": 1
+            "maximum": 14,
+            "default": 14
           },
           "include_air_quality": {
             "type": "boolean",
@@ -548,6 +548,430 @@
                 "tournament": { "type": "string" },
                 "start": { "type": "string" },
                 "match": { "type": "string" }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "get_historical_weather",
+      "description": "Get historical weather data for a date range within the last year.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Location query (city name, lat/lon, postal code, etc)."
+          },
+          "start_date": {
+            "type": "string",
+            "description": "Start date in YYYY-MM-DD format (within last year).",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          },
+          "end_date": {
+            "type": "string",
+            "description": "End date in YYYY-MM-DD format (within last year, must be after start_date).",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": ["query", "start_date", "end_date"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Historical weather data for the date range",
+        "properties": {
+          "location": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "region": { "type": "string" },
+              "country": { "type": "string" },
+              "lat": { "type": "number" },
+              "lon": { "type": "number" },
+              "tz_id": { "type": "string" },
+              "localtime_epoch": { "type": "number" },
+              "localtime": { "type": "string" }
+            }
+          },
+          "forecast": {
+            "type": "object",
+            "properties": {
+              "forecastday": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "date": { "type": "string" },
+                    "date_epoch": { "type": "number" },
+                    "day": {
+                      "type": "object",
+                      "properties": {
+                        "maxtemp_c": { "type": "number" },
+                        "maxtemp_f": { "type": "number" },
+                        "mintemp_c": { "type": "number" },
+                        "mintemp_f": { "type": "number" },
+                        "avgtemp_c": { "type": "number" },
+                        "avgtemp_f": { "type": "number" },
+                        "maxwind_mph": { "type": "number" },
+                        "maxwind_kph": { "type": "number" },
+                        "totalprecip_mm": { "type": "number" },
+                        "totalprecip_in": { "type": "number" },
+                        "totalsnow_cm": { "type": "number" },
+                        "avgvis_km": { "type": "number" },
+                        "avgvis_miles": { "type": "number" },
+                        "avghumidity": { "type": "number" },
+                        "daily_will_it_rain": { "type": "number" },
+                        "daily_chance_of_rain": { "type": "number" },
+                        "daily_will_it_snow": { "type": "number" },
+                        "daily_chance_of_snow": { "type": "number" },
+                        "condition": {
+                          "type": "object",
+                          "properties": {
+                            "text": { "type": "string" },
+                            "icon": { "type": "string" },
+                            "code": { "type": "number" }
+                          }
+                        },
+                        "uv": { "type": "number" }
+                      }
+                    },
+                    "astro": {
+                      "type": "object",
+                      "properties": {
+                        "sunrise": { "type": "string" },
+                        "sunset": { "type": "string" },
+                        "moonrise": { "type": "string" },
+                        "moonset": { "type": "string" },
+                        "moon_phase": { "type": "string" },
+                        "moon_illumination": { "type": "number" },
+                        "is_moon_up": { "type": "number" },
+                        "is_sun_up": { "type": "number" }
+                      }
+                    },
+                    "hour": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "time_epoch": { "type": "number" },
+                          "time": { "type": "string" },
+                          "temp_c": { "type": "number" },
+                          "temp_f": { "type": "number" },
+                          "is_day": { "type": "number" },
+                          "condition": {
+                            "type": "object",
+                            "properties": {
+                              "text": { "type": "string" },
+                              "icon": { "type": "string" },
+                              "code": { "type": "number" }
+                            }
+                          },
+                          "wind_mph": { "type": "number" },
+                          "wind_kph": { "type": "number" },
+                          "wind_degree": { "type": "number" },
+                          "wind_dir": { "type": "string" },
+                          "pressure_mb": { "type": "number" },
+                          "pressure_in": { "type": "number" },
+                          "precip_mm": { "type": "number" },
+                          "precip_in": { "type": "number" },
+                          "humidity": { "type": "number" },
+                          "cloud": { "type": "number" },
+                          "feelslike_c": { "type": "number" },
+                          "feelslike_f": { "type": "number" },
+                          "windchill_c": { "type": "number" },
+                          "windchill_f": { "type": "number" },
+                          "heatindex_c": { "type": "number" },
+                          "heatindex_f": { "type": "number" },
+                          "dewpoint_c": { "type": "number" },
+                          "dewpoint_f": { "type": "number" },
+                          "will_it_rain": { "type": "number" },
+                          "chance_of_rain": { "type": "number" },
+                          "will_it_snow": { "type": "number" },
+                          "chance_of_snow": { "type": "number" },
+                          "vis_km": { "type": "number" },
+                          "vis_miles": { "type": "number" },
+                          "gust_mph": { "type": "number" },
+                          "gust_kph": { "type": "number" },
+                          "uv": { "type": "number" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "get_future_weather",
+      "description": "Get future weather forecast for dates between 14-300 days ahead in 3-hourly intervals.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Location query (city name, lat/lon, postal code, etc)."
+          },
+          "date": {
+            "type": "string",
+            "description": "Future date in YYYY-MM-DD format (14-300 days from today).",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": ["query", "date"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Future weather forecast data in 3-hourly intervals",
+        "properties": {
+          "location": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "region": { "type": "string" },
+              "country": { "type": "string" },
+              "lat": { "type": "number" },
+              "lon": { "type": "number" },
+              "tz_id": { "type": "string" },
+              "localtime_epoch": { "type": "number" },
+              "localtime": { "type": "string" }
+            }
+          },
+          "forecast": {
+            "type": "object",
+            "properties": {
+              "forecastday": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "date": { "type": "string" },
+                    "date_epoch": { "type": "number" },
+                    "day": {
+                      "type": "object",
+                      "properties": {
+                        "maxtemp_c": { "type": "number" },
+                        "maxtemp_f": { "type": "number" },
+                        "mintemp_c": { "type": "number" },
+                        "mintemp_f": { "type": "number" },
+                        "avgtemp_c": { "type": "number" },
+                        "avgtemp_f": { "type": "number" },
+                        "maxwind_mph": { "type": "number" },
+                        "maxwind_kph": { "type": "number" },
+                        "totalprecip_mm": { "type": "number" },
+                        "totalprecip_in": { "type": "number" },
+                        "avgvis_km": { "type": "number" },
+                        "avgvis_miles": { "type": "number" },
+                        "avghumidity": { "type": "number" },
+                        "condition": {
+                          "type": "object",
+                          "properties": {
+                            "text": { "type": "string" },
+                            "icon": { "type": "string" },
+                            "code": { "type": "number" }
+                          }
+                        },
+                        "uv": { "type": "number" }
+                      }
+                    },
+                    "hour": {
+                      "type": "array",
+                      "description": "3-hourly weather data",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "time_epoch": { "type": "number" },
+                          "time": { "type": "string" },
+                          "temp_c": { "type": "number" },
+                          "temp_f": { "type": "number" },
+                          "condition": {
+                            "type": "object",
+                            "properties": {
+                              "text": { "type": "string" },
+                              "icon": { "type": "string" },
+                              "code": { "type": "number" }
+                            }
+                          },
+                          "wind_mph": { "type": "number" },
+                          "wind_kph": { "type": "number" },
+                          "wind_degree": { "type": "number" },
+                          "wind_dir": { "type": "string" },
+                          "pressure_mb": { "type": "number" },
+                          "pressure_in": { "type": "number" },
+                          "precip_mm": { "type": "number" },
+                          "precip_in": { "type": "number" },
+                          "humidity": { "type": "number" },
+                          "cloud": { "type": "number" },
+                          "feelslike_c": { "type": "number" },
+                          "feelslike_f": { "type": "number" },
+                          "vis_km": { "type": "number" },
+                          "vis_miles": { "type": "number" },
+                          "gust_mph": { "type": "number" },
+                          "gust_kph": { "type": "number" }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "name": "get_marine_weather",
+      "description": "Get marine and sailing weather forecast for 5 days with optional tide data.",
+      "inputSchema": {
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Location query (city name, lat/lon, postal code, etc)."
+          },
+          "with_tide": {
+            "type": "boolean",
+            "description": "Include tide data in the response.",
+            "default": false
+          }
+        },
+        "required": ["query"]
+      },
+      "outputSchema": {
+        "type": "object",
+        "description": "Marine weather forecast with optional tide data",
+        "properties": {
+          "location": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "region": { "type": "string" },
+              "country": { "type": "string" },
+              "lat": { "type": "number" },
+              "lon": { "type": "number" },
+              "tz_id": { "type": "string" },
+              "localtime_epoch": { "type": "number" },
+              "localtime": { "type": "string" }
+            }
+          },
+          "forecast": {
+            "type": "object",
+            "properties": {
+              "forecastday": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "date": { "type": "string" },
+                    "date_epoch": { "type": "number" },
+                    "day": {
+                      "type": "object",
+                      "properties": {
+                        "maxtemp_c": { "type": "number" },
+                        "maxtemp_f": { "type": "number" },
+                        "mintemp_c": { "type": "number" },
+                        "mintemp_f": { "type": "number" },
+                        "avgtemp_c": { "type": "number" },
+                        "avgtemp_f": { "type": "number" },
+                        "maxwind_mph": { "type": "number" },
+                        "maxwind_kph": { "type": "number" },
+                        "totalprecip_mm": { "type": "number" },
+                        "totalprecip_in": { "type": "number" },
+                        "avgvis_km": { "type": "number" },
+                        "avgvis_miles": { "type": "number" },
+                        "avghumidity": { "type": "number" },
+                        "condition": {
+                          "type": "object",
+                          "properties": {
+                            "text": { "type": "string" },
+                            "icon": { "type": "string" },
+                            "code": { "type": "number" }
+                          }
+                        },
+                        "uv": { "type": "number" }
+                      }
+                    },
+                    "hour": {
+                      "type": "array",
+                      "description": "Hourly marine weather data",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "time_epoch": { "type": "number" },
+                          "time": { "type": "string" },
+                          "temp_c": { "type": "number" },
+                          "temp_f": { "type": "number" },
+                          "condition": {
+                            "type": "object",
+                            "properties": {
+                              "text": { "type": "string" },
+                              "icon": { "type": "string" },
+                              "code": { "type": "number" }
+                            }
+                          },
+                          "wind_mph": { "type": "number" },
+                          "wind_kph": { "type": "number" },
+                          "wind_degree": { "type": "number" },
+                          "wind_dir": { "type": "string" },
+                          "pressure_mb": { "type": "number" },
+                          "pressure_in": { "type": "number" },
+                          "precip_mm": { "type": "number" },
+                          "precip_in": { "type": "number" },
+                          "humidity": { "type": "number" },
+                          "cloud": { "type": "number" },
+                          "feelslike_c": { "type": "number" },
+                          "feelslike_f": { "type": "number" },
+                          "vis_km": { "type": "number" },
+                          "vis_miles": { "type": "number" },
+                          "gust_mph": { "type": "number" },
+                          "gust_kph": { "type": "number" },
+                          "sig_ht_mt": {
+                            "type": "number",
+                            "description": "Significant wave height in meters"
+                          },
+                          "swl_ht_mt": {
+                            "type": "number",
+                            "description": "Swell height in meters"
+                          },
+                          "swl_dir": {
+                            "type": "number",
+                            "description": "Swell direction in degrees"
+                          },
+                          "swl_per_sec": {
+                            "type": "number",
+                            "description": "Swell period in seconds"
+                          },
+                          "water_temp_c": {
+                            "type": "number",
+                            "description": "Water temperature in Celsius"
+                          },
+                          "water_temp_f": {
+                            "type": "number",
+                            "description": "Water temperature in Fahrenheit"
+                          }
+                        }
+                      }
+                    },
+                    "tides": {
+                      "type": "array",
+                      "description": "Tide information (when with_tide is true)",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "tide_time": { "type": "string" },
+                          "tide_height_mt": { "type": "number" },
+                          "tide_type": {
+                            "type": "string",
+                            "enum": ["HIGH", "LOW"]
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
               }
             }
           }

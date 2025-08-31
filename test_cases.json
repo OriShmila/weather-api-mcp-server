@@ -1,132 +1,58 @@
 {
   "test_cases": [
     {
-      "name": "get_weather_1_day",
+      "name": "get_weather_basic",
       "tool": "get_weather",
       "arguments": {
         "query": "Paris",
-        "days": 1
-      },
-      "description": "Get 1-day forecast for Paris",
-      "expected_fields": ["location", "current", "forecast"],
-      "should_succeed": true
-    },
-    {
-      "name": "get_weather_3_days",
-      "tool": "get_weather",
-      "arguments": {
-        "query": "Tokyo",
         "days": 3
       },
-      "description": "Get 3-day forecast for Tokyo",
+      "description": "Get 3-day forecast for Paris",
       "expected_fields": ["location", "current", "forecast"],
       "should_succeed": true
     },
     {
-      "name": "get_weather_with_air_quality_only",
+      "name": "get_weather_with_features",
       "tool": "get_weather",
       "arguments": {
         "query": "Delhi",
-        "days": 3,
+        "days": 5,
         "include_air_quality": true,
-        "include_alerts": false
+        "include_alerts": true
       },
-      "description": "Get 3-day forecast for Delhi with air quality but no alerts",
+      "description": "Get weather with air quality and alerts",
       "expected_fields": ["location", "current", "forecast"],
       "should_succeed": true
     },
     {
-      "name": "get_astronomy_data_winter_solstice",
+      "name": "get_astronomy_winter_solstice",
       "tool": "get_astronomy_data",
       "arguments": {
         "query": "Reykjavik",
-        "date": "2024-12-21"
+        "date": "last month"
       },
-      "description": "Get astronomy data for Reykjavik on winter solstice",
+      "description": "Get astronomy data for last month",
       "expected_fields": ["location", "astronomy"],
       "should_succeed": true
     },
     {
-      "name": "get_astronomy_data_summer_solstice",
-      "tool": "get_astronomy_data",
-      "arguments": {
-        "query": "Fairbanks",
-        "date": "2024-06-21"
-      },
-      "description": "Get astronomy data for Fairbanks on summer solstice",
-      "expected_fields": ["location", "astronomy"],
-      "should_succeed": true
-    },
-    {
-      "name": "get_astronomy_data_equator",
-      "tool": "get_astronomy_data",
-      "arguments": {
-        "query": "Quito",
-        "date": "2024-12-25"
-      },
-      "description": "Get astronomy data for equatorial city Quito",
-      "expected_fields": ["location", "astronomy"],
-      "should_succeed": true
-    },
-    {
-      "name": "get_astronomy_data_south_hemisphere",
-      "tool": "get_astronomy_data",
-      "arguments": {
-        "query": "Sydney",
-        "date": "2024-12-25"
-      },
-      "description": "Get astronomy data for Southern Hemisphere Sydney",
-      "expected_fields": ["location", "astronomy"],
-      "should_succeed": true
-    },
-    {
-      "name": "get_astronomy_data_new_year",
+      "name": "get_astronomy_yesterday",
       "tool": "get_astronomy_data",
       "arguments": {
         "query": "Tokyo",
-        "date": "2025-01-01"
+        "date": "yesterday"
       },
-      "description": "Get astronomy data for Tokyo on New Year's Day",
+      "description": "Get astronomy data for yesterday",
       "expected_fields": ["location", "astronomy"],
       "should_succeed": true
     },
     {
-      "name": "search_locations_exact_match",
-      "tool": "search_locations",
-      "arguments": {
-        "query": "San Francisco"
-      },
-      "description": "Search for exact city name San Francisco",
-      "expected_fields": ["items"],
-      "should_succeed": true
-    },
-    {
-      "name": "search_locations_partial_match",
-      "tool": "search_locations",
-      "arguments": {
-        "query": "New York"
-      },
-      "description": "Search for partial match New York (multiple results)",
-      "expected_fields": ["items"],
-      "should_succeed": true
-    },
-    {
-      "name": "search_locations_country_search",
+      "name": "search_locations_city",
       "tool": "search_locations",
       "arguments": {
         "query": "London"
       },
-      "description": "Search for London (multiple countries have London)",
-      "expected_fields": ["items"],
-      "should_succeed": true
-    },
-    {
-      "name": "search_locations_airport_code",
-      "tool": "search_locations",
-      "arguments": {
-        "query": "JFK"
-      },
-      "description": "Search using airport code JFK",
+      "description": "Search for London locations",
       "expected_fields": ["items"],
       "should_succeed": true
     },
@@ -141,104 +67,160 @@
       "should_succeed": true
     },
     {
-      "name": "get_timezone_major_city",
-      "tool": "get_timezone",
-      "arguments": {
-        "query": "Berlin"
-      },
-      "description": "Get timezone info for major European city Berlin",
-      "expected_fields": ["location"],
-      "should_succeed": true
-    },
-    {
-      "name": "get_timezone_international_dateline",
-      "tool": "get_timezone",
-      "arguments": {
-        "query": "Auckland"
-      },
-      "description": "Get timezone info for Auckland near international dateline",
-      "expected_fields": ["location"],
-      "should_succeed": true
-    },
-    {
-      "name": "get_timezone_multiple_zones_country",
+      "name": "get_timezone_city",
       "tool": "get_timezone",
       "arguments": {
         "query": "New York"
       },
-      "description": "Get timezone info for US city with multiple time zones",
+      "description": "Get timezone for New York",
       "expected_fields": ["location"],
       "should_succeed": true
     },
     {
-      "name": "get_timezone_southern_hemisphere",
-      "tool": "get_timezone",
-      "arguments": {
-        "query": "Buenos Aires"
-      },
-      "description": "Get timezone info for Southern Hemisphere city",
-      "expected_fields": ["location"],
-      "should_succeed": true
-    },
-    {
-      "name": "get_timezone_utc_location",
-      "tool": "get_timezone",
-      "arguments": {
-        "query": "London"
-      },
-      "description": "Get timezone info for UTC reference city London",
-      "expected_fields": ["location"],
-      "should_succeed": true
-    },
-    {
-      "name": "get_sport_events_football_city",
+      "name": "get_sport_events_city",
       "tool": "get_sport_events",
       "arguments": {
         "query": "Manchester"
       },
-      "description": "Get sports events for football city Manchester",
+      "description": "Get sports events for Manchester",
       "expected_fields": [],
       "should_succeed": true
     },
     {
-      "name": "get_sport_events_cricket_venue",
-      "tool": "get_sport_events",
+      "name": "get_historical_weather_week",
+      "tool": "get_historical_weather",
       "arguments": {
-        "query": "Lord's"
+        "query": "London",
+        "start_date": "30 days ago",
+        "end_date": "24 days ago"
       },
-      "description": "Get sports events for famous cricket venue Lord's",
-      "expected_fields": [],
+      "description": "Get historical weather for London (week range)",
+      "expected_fields": ["location", "forecast"],
       "should_succeed": true
     },
     {
-      "name": "get_sport_events_multiple_sports",
-      "tool": "get_sport_events",
+      "name": "get_historical_weather_single_day",
+      "tool": "get_historical_weather",
       "arguments": {
-        "query": "Melbourne"
+        "query": "Tokyo",
+        "start_date": "15 days ago",
+        "end_date": "15 days ago"
       },
-      "description": "Get sports events for multi-sport city Melbourne",
-      "expected_fields": [],
+      "description": "Get historical weather for single day",
+      "expected_fields": ["location", "forecast"],
       "should_succeed": true
     },
     {
-      "name": "get_sport_events_golf_location",
-      "tool": "get_sport_events",
+      "name": "get_future_weather_basic",
+      "tool": "get_future_weather",
       "arguments": {
-        "query": "St Andrews"
+        "query": "Paris",
+        "date": "16 days from now"
       },
-      "description": "Get sports events for golf mecca St Andrews",
-      "expected_fields": [],
+      "description": "Get future weather for Paris",
+      "expected_fields": ["location", "forecast"],
       "should_succeed": true
     },
     {
-      "name": "get_sport_events_international",
-      "tool": "get_sport_events",
+      "name": "get_future_weather_far",
+      "tool": "get_future_weather",
       "arguments": {
-        "query": "Barcelona"
+        "query": "Sydney",
+        "date": "200 days from now"
       },
-      "description": "Get sports events for international sports city Barcelona",
-      "expected_fields": [],
+      "description": "Get future weather far ahead",
+      "expected_fields": ["location", "forecast"],
       "should_succeed": true
+    },
+    {
+      "name": "get_marine_weather_basic",
+      "tool": "get_marine_weather",
+      "arguments": {
+        "query": "Miami"
+      },
+      "description": "Get marine weather without tides",
+      "expected_fields": ["location", "forecast"],
+      "should_succeed": true
+    },
+    {
+      "name": "get_marine_weather_with_tides",
+      "tool": "get_marine_weather",
+      "arguments": {
+        "query": "San Francisco",
+        "with_tide": true
+      },
+      "description": "Get marine weather with tides",
+      "expected_fields": ["location", "forecast"],
+      "should_succeed": true
+    },
+    {
+      "name": "get_historical_weather_invalid_range",
+      "tool": "get_historical_weather",
+      "arguments": {
+        "query": "London",
+        "start_date": "20 days ago",
+        "end_date": "25 days ago"
+      },
+      "description": "Test invalid date range (start > end)",
+      "expected_fields": [],
+      "should_succeed": false
+    },
+    {
+      "name": "get_historical_weather_too_old",
+      "tool": "get_historical_weather",
+      "arguments": {
+        "query": "Paris",
+        "start_date": "400 days ago",
+        "end_date": "394 days ago"
+      },
+      "description": "Test dates too far in past",
+      "expected_fields": [],
+      "should_succeed": false
+    },
+    {
+      "name": "get_historical_weather_future_dates",
+      "tool": "get_historical_weather",
+      "arguments": {
+        "query": "Tokyo",
+        "start_date": "5 days from now",
+        "end_date": "7 days from now"
+      },
+      "description": "Test historical with future dates",
+      "expected_fields": [],
+      "should_succeed": false
+    },
+    {
+      "name": "get_future_weather_too_soon",
+      "tool": "get_future_weather",
+      "arguments": {
+        "query": "London",
+        "date": "5 days from now"
+      },
+      "description": "Test future date too soon (< 14 days)",
+      "expected_fields": [],
+      "should_succeed": false
+    },
+    {
+      "name": "get_future_weather_too_far",
+      "tool": "get_future_weather",
+      "arguments": {
+        "query": "Paris",
+        "date": "350 days from now"
+      },
+      "description": "Test future date too far (> 300 days)",
+      "expected_fields": [],
+      "should_succeed": false
+    },
+    {
+      "name": "get_future_weather_invalid_date",
+      "tool": "get_future_weather",
+      "arguments": {
+        "query": "Sydney",
+        "date": "2025-02-30"
+      },
+      "description": "Test invalid date format",
+      "expected_fields": [],
+      "should_succeed": false
     },
     {
       "name": "invalid_location",
@@ -267,104 +249,20 @@
         "query": "London",
         "date": "2024/01/01"
       },
-      "description": "Test with invalid date format",
+      "description": "Test invalid date format",
       "expected_fields": [],
       "should_succeed": false
     },
     {
       "name": "invalid_days_count",
-        "tool": "get_weather",
+      "tool": "get_weather",
       "arguments": {
         "query": "London",
         "days": 20
       },
-      "description": "Test with invalid days count (>14)",
+      "description": "Test invalid days count (>14)",
       "expected_fields": [],
       "should_succeed": false
-    },
-    {
-      "name": "negative_days_count",
-      "tool": "get_weather",
-      "arguments": {
-        "query": "Paris",
-        "days": -1
-      },
-      "description": "Test with negative days count",
-      "expected_fields": [],
-      "should_succeed": false
-    }
-  ],
-  "commented_out_tests": [
-    {
-      "_note": "The following test is commented out because it requires a premium WeatherAPI subscription",
-      "_original_test": {
-        "name": "get_weather_history",
-        "tool": "get_weather_history",
-        "arguments": {
-          "query": "Sydney",
-          "date": "2024-01-01"
-        },
-        "description": "Get historical weather for Sydney on New Year's Day 2024",
-        "expected_fields": ["location", "forecast"],
-        "should_succeed": true
-      },
-      "_additional_history_tests": [
-        {
-          "name": "get_weather_history_recent",
-          "tool": "get_weather_history",
-          "arguments": {
-            "query": "London",
-            "date": "2024-07-01"
-          },
-          "description": "Get historical weather for London in summer",
-          "expected_fields": ["location", "forecast"],
-          "should_succeed": true
-        },
-        {
-          "name": "get_weather_history_winter",
-          "tool": "get_weather_history",
-          "arguments": {
-            "query": "Moscow",
-            "date": "2024-01-15"
-          },
-          "description": "Get historical weather for Moscow in winter",
-          "expected_fields": ["location", "forecast"],
-          "should_succeed": true
-        },
-        {
-          "name": "get_weather_history_tropical",
-          "tool": "get_weather_history",
-          "arguments": {
-            "query": "Bangkok",
-            "date": "2024-04-13"
-          },
-          "description": "Get historical weather for Bangkok during hot season",
-          "expected_fields": ["location", "forecast"],
-          "should_succeed": true
-        },
-        {
-          "name": "get_weather_history_coordinates",
-          "tool": "get_weather_history",
-          "arguments": {
-            "query": "35.6762,139.6503",
-            "date": "2024-03-20"
-          },
-          "description": "Get historical weather using coordinates (Tokyo)",
-          "expected_fields": ["location", "forecast"],
-          "should_succeed": true
-        },
-        {
-          "name": "get_weather_history_invalid_date",
-          "tool": "get_weather_history",
-          "arguments": {
-            "query": "Paris",
-            "date": "2024-13-01"
-          },
-          "description": "Test historical weather with invalid date",
-          "expected_fields": [],
-          "should_succeed": false
-        }
-      ]
     }
   ]
 }

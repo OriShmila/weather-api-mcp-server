@@ -7,12 +7,15 @@ Tests actual tool calls with real API requests.
 import asyncio
 import json
 import time
+import re
+from datetime import datetime, timedelta
 from typing import Dict, List, Any
 import jsonschema
 from jsonschema import ValidationError
 import logging
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
+
 
 class TestResults:
     """Track test results and statistics."""
@@ -78,12 +81,116 @@ class TestResults:
                 print(f"  • {result['test']}: {result['message']}")
 
 
+def parse_relative_date(date_str: str) -> str:
+    """Parse natural language date expressions and return YYYY-MM-DD format."""
+    today = datetime.now()
+
+    # Handle common relative date patterns
+    patterns = [
+        # X days ago/from now
+        (r"(\d+)\s*days?\s+ago", lambda m: today - timedelta(days=int(m.group(1)))),
+        (
+            r"(\d+)\s*days?\s+from\s+now",
+            lambda m: today + timedelta(days=int(m.group(1))),
+        ),
+        (r"in\s+(\d+)\s*days?", lambda m: today + timedelta(days=int(m.group(1)))),
+        # X weeks ago/from now
+        (r"(\d+)\s*weeks?\s+ago", lambda m: today - timedelta(weeks=int(m.group(1)))),
+        (
+            r"(\d+)\s*weeks?\s+from\s+now",
+            lambda m: today + timedelta(weeks=int(m.group(1))),
+        ),
+        (r"in\s+(\d+)\s*weeks?", lambda m: today + timedelta(weeks=int(m.group(1)))),
+        # X months ago/from now (approximate)
+        (
+            r"(\d+)\s*months?\s+ago",
+            lambda m: today - timedelta(days=int(m.group(1)) * 30),
+        ),
+        (
+            r"(\d+)\s*months?\s+from\s+now",
+            lambda m: today + timedelta(days=int(m.group(1)) * 30),
+        ),
+        # Special keywords
+        (r"^today$", lambda m: today),
+        (r"^yesterday$", lambda m: today - timedelta(days=1)),
+        (r"^tomorrow$", lambda m: today + timedelta(days=1)),
+        (r"^last\s+week$", lambda m: today - timedelta(weeks=1)),
+        (r"^next\s+week$", lambda m: today + timedelta(weeks=1)),
+        (r"^last\s+month$", lambda m: today - timedelta(days=30)),
+        (r"^next\s+month$", lambda m: today + timedelta(days=30)),
+    ]
+
+    for pattern, func in patterns:
+        match = re.match(pattern, date_str.lower().strip())
+        if match:
+            result_date = func(match)
+            return result_date.strftime("%Y-%m-%d")
+
+    # If no pattern matches, return as-is (might be already in YYYY-MM-DD format)
+    return date_str
+
+
+def process_date_templates(data: Any) -> Any:
+    """Process natural language date expressions in test data."""
+    if isinstance(data, str):
+        # Check if this looks like a relative date expression or contains one in ${}
+        if re.search(r"\$\{([^}]+)\}", data):
+            # Replace ${relative_date} patterns
+            def replace_date(match):
+                date_expr = match.group(1)
+                return parse_relative_date(date_expr)
+
+            return re.sub(r"\$\{([^}]+)\}", replace_date, data)
+        elif not re.match(r"^\d{4}-\d{2}-\d{2}$", data):
+            # Try parsing as relative date if it's not already YYYY-MM-DD
+            parsed = parse_relative_date(data)
+            if parsed != data:  # Only replace if parsing succeeded
+                return parsed
+
+        return data
+    elif isinstance(data, dict):
+        return {key: process_date_templates(value) for key, value in data.items()}
+    elif isinstance(data, list):
+        return [process_date_templates(item) for item in data]
+    else:
+        return data
+
+
 def load_test_cases() -> List[Dict[str, Any]]:
-    """Load test cases from JSON file."""
+    """Load test cases from JSON file and process date templates."""
     try:
         with open("test_cases.json", "r") as f:
             data = json.load(f)
-        return data["test_cases"]
+
+        # Process date templates in test cases
+        test_cases = process_date_templates(data["test_cases"])
+
+        # Count test cases with relative dates
+        template_count = sum(
+            1
+            for tc_str in [json.dumps(tc) for tc in test_cases]
+            if "${" in tc_str
+            or any(
+                word in tc_str.lower()
+                for word in [
+                    "days ago",
+                    "days from now",
+                    "weeks ago",
+                    "weeks from now",
+                    "yesterday",
+                    "tomorrow",
+                    "last week",
+                    "next week",
+                ]
+            )
+        )
+
+        if template_count > 0:
+            print(
+                f"📅 Processed {template_count} test cases with natural language dates"
+            )
+
+        return test_cases
     except FileNotFoundError:
         print("❌ test_cases.json not found")
         return []
@@ -455,11 +562,13 @@ async def main():
     print("  🔍 Output responses validated against JSON Schema")
     print("  🔍 Schema structure validation with definitions")
     print("  🔍 Comprehensive error reporting")
+    print("  🔍 Dynamic date parameterization with templates")
     print("\n💡 Usage Information:")
     print("  • Set WEATHER_API_KEY in .env file for API tests")
     print("  • Run with: uv run python test_server.py")
     print("  • Add test cases in test_cases.json")
     print("  • Modify tools.json to update schemas")
+    print("  • Use natural language dates like '30 days ago', 'in 2 weeks'")
     print("  • Server ready for MCP client connections")
 
 
